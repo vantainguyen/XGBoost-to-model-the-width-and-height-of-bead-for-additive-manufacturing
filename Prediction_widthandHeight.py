@@ -2,6 +2,12 @@ import tabula
 import pandas as pd
 import numpy as np
 import sklearn
+from sklearn.metrics import mean_squared_error
+from numpy import sqrt
+from sklearn.preprocessing import MinMaxScaler
+import xgboost as xgb
+
+
 filename = 'Xiong2014_Article_BeadGeometryPredictionForRobot.pdf'
 table = tabula.read_pdf(filename, pages=[4,5], multiple_tables=False)
 table[0]
@@ -51,7 +57,6 @@ for i in range(len(H)):
     features.append([F[i],S[i],V[i],D_n[i]])
     targets.append([W[i],H[i]])
     
-from sklearn.preprocessing import MinMaxScaler
 
 scaler = MinMaxScaler()
 scaler.fit(features)
@@ -72,7 +77,6 @@ test_tar = [[8.798,3.346],[7.899,2.961],[7.954,2.854],[7.249,2.662],
             [11.233,3.304],[10.610,3.411],[8.494,2.790],[7.788,2.811],
             [9.849,2.876]]
 
-import xgboost as xgb
 # Width prediction
 regressor_width = xgb.XGBRegressor(n_estimators = 200, reg_lambda=.5, gamma = 0.0003
                              , max_depth = 5,verbosity=2)
@@ -107,8 +111,6 @@ H_arr = np.array(W_arr)
 H_acc = abs((H_tar_hat-H_arr)/H_arr*100)
 H_acc
     
-from sklearn.metrics import mean_squared_error
-from numpy import sqrt
 
 sqrt(mean_squared_error(W_tar_hat,W_arr))
 sqrt(mean_squared_error(H_tar_hat,H_arr))
